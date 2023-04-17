@@ -2,7 +2,7 @@ import uvicorn as uvicorn
 from fastapi import FastAPI
 from starlette.middleware.cors import CORSMiddleware
 
-from app.api import controllers
+from app.api import controllers, dependencies
 from app.config import load_config
 from app.infrastructure.database.factory import create_pool, make_connection_string
 
@@ -22,6 +22,7 @@ def main() -> FastAPI:
         allow_headers=["*"],
     )
     controllers.setup(app)
+    dependencies.setup(app, pool, settings)
     return app
 
 
@@ -29,5 +30,6 @@ if __name__ == '__main__':
     uvicorn.run(
         "app.api.__main__:main",
         host="0.0.0.0",
-        port=15400
+        port=15400,
+        reload=True
     )
